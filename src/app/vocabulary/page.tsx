@@ -1,83 +1,44 @@
 "use client";
 
+import WordModal from "@/app/components/WordModal";
+import FloatingButton from "@/app/components/FloatingButton";
+import { useWords } from "@/hooks/useWords";
 import { useState } from "react";
 import Link from "next/link";
 import { Search, ChevronDown, ChevronUp, Star } from "lucide-react";
 
-const initialWords = [
-  {
-    id: 1,
-    word: "안녕하세요",
-    meaning: "你好；您好",
-    type: "표현",
-    favorite: true,
-    example: "오늘 처음 뵙겠습니다. 안녕하세요.",
-    synonym: "안녕하십니까",
-    antonym: "-",
-    note: "正式场合也可以使用。",
-  },
-  {
-    id: 2,
-    word: "크다",
-    meaning: "大",
-    type: "형용사",
-    favorite: false,
-    example: "집이 정말 크네요.",
-    synonym: "거대하다, 커다랗다",
-    antonym: "작다",
-    note: "经常用于描述空间大小。",
-  },
-  {
-    id: 3,
-    word: "배우다",
-    meaning: "学习",
-    type: "동사",
-    favorite: true,
-    example: "저는 한국어를 배우고 있어요.",
-    synonym: "익히다",
-    antonym: "-",
-    note: "常与 언어、기술 搭配。",
-  },
-  {
-    id: 4,
-    word: "학생",
-    meaning: "学生",
-    type: "명사",
-    favorite: false,
-    example: "저는 대학생입니다.",
-    synonym: "학습자",
-    antonym: "-",
-    note: "最基础的韩语名词之一。",
-  },
-  {
-    id: 5,
-    word: "천천히",
-    meaning: "慢慢地",
-    type: "부사",
-    favorite: false,
-    example: "천천히 말씀해 주세요.",
-    synonym: "느리게",
-    antonym: "빨리",
-    note: "口语出现频率很高。",
-  },
-];
-
 export default function VocabularyPage() {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("전체");
-  const [words, setWords] = useState(initialWords);
+  const {
+    words,
+    addWord,
+    updateWord,
+    deleteWord,
+    toggleFavorite,
+  } = useWords();
+
+  const [openModal, setOpenModal] = useState(false);
+
+  const [editingWord, setEditingWord] = useState(null);
 
   const filters = ["전체", "⭐", "명사", "동사", "형용사", "부사", "표현"];
 
-  const toggleFavorite = (id: number) => {
-    setWords((prev) =>
-      prev.map((word) =>
-        word.id === id ? { ...word, favorite: !word.favorite } : word
-      )
-    );
+  const handleAddWord = (word: any) => {
+    addWord({
+      ...word,
+      id: Date.now(),
+    });
   };
 
   const filteredWords = words.filter((word) => {
+    const handleAddWord = (word: any) => {
+      addWord({
+        ...word,
+        id: Date.now(),
+      });
+    };
+
     const matchesSearch =
       word.word.includes(search) || word.meaning.includes(search);
 
@@ -85,8 +46,8 @@ export default function VocabularyPage() {
       filter === "전체"
         ? true
         : filter === "⭐"
-        ? word.favorite
-        : word.type === filter;
+          ? word.favorite
+          : word.type === filter;
 
     return matchesSearch && matchesFilter;
   });
@@ -120,11 +81,10 @@ export default function VocabularyPage() {
             <button
               key={item}
               onClick={() => setFilter(item)}
-              className={`px-4 py-2 rounded-full text-sm transition ${
-                filter === item
-                  ? "bg-[#7A866D] text-white"
-                  : "bg-white border border-[#E6E2DA] text-[#666]"
-              }`}
+              className={`px-4 py-2 rounded-full text-sm transition ${filter === item
+                ? "bg-[#7A866D] text-white"
+                : "bg-white border border-[#E6E2DA] text-[#666]"
+                }`}
             >
               {item}
             </button>
@@ -141,6 +101,19 @@ export default function VocabularyPage() {
           ))}
         </div>
       </div>
+      <WordModal
+        open={openModal}
+        initialValue={editingWord}
+        onClose={() => {
+          setOpenModal(false);
+          setEditingWord(null);
+        }}
+        onSave={handleAddWord}
+      />
+
+      <FloatingButton
+        onClick={() => setOpenModal(true)}
+      />
     </main>
   );
 }

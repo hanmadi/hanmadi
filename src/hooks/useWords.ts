@@ -13,9 +13,7 @@ export function useWords() {
   }, []);
 
   useEffect(() => {
-    if (words.length > 0) {
-      saveWords(words);
-    }
+    saveWords(words);
   }, [words]);
 
   function toggleFavorite(id: number) {

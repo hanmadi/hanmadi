@@ -15,6 +15,7 @@ export function getWords(): Word[] {
       STORAGE_KEY,
       JSON.stringify(defaultWords)
     );
+
     return defaultWords;
   }
 
