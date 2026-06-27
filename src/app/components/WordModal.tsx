@@ -16,6 +16,7 @@ const emptyWord: Word = {
   word: "",
   meaning: "",
   type: "명사",
+  category: "TOPIK1",
   favorite: false,
   example: "",
   synonym: "",
@@ -40,7 +41,7 @@ export default function WordModal({
   }, [initialValue, open]);
 
   if (!open) return null;
-    const handleChange = (
+  const handleChange = (
     key: keyof Word,
     value: string
   ) => {
@@ -96,7 +97,7 @@ export default function WordModal({
         </h2>
 
         <div className="grid grid-cols-2 gap-5">
-                      <Input
+          <Input
             label="단어"
             value={form.word}
             onChange={(value) =>
@@ -112,11 +113,40 @@ export default function WordModal({
             }
           />
 
-          <Input
+          <Select
             label="품사"
             value={form.type}
+            options={[
+              "명사",
+              "동사",
+              "형용사",
+              "부사",
+              "표현",
+            ]}
             onChange={(value) =>
               handleChange("type", value)
+            }
+          />
+
+          <Select
+            label="분류"
+            value={form.category}
+            options={[
+              "TOPIK1",
+              "TOPIK2",
+              "TOPIK3",
+              "TOPIK4",
+              "TOPIK5",
+              "TOPIK6",
+              "일상",
+              "여행",
+              "비즈니스",
+              "K-POP",
+              "드라마",
+              "기타",
+            ]}
+            onChange={(value) =>
+              handleChange("category", value)
             }
           />
 
@@ -224,6 +254,50 @@ function Input({
           transition
         "
       />
+     
     </div>
   );
+}
+ function Select({
+        label,
+        value,
+        options,
+        onChange,
+}: {
+        label: string;
+      value: string;
+      options: string[];
+  onChange: (value: string) => void;
+}) {
+  return (
+      <div className="flex flex-col gap-2">
+        <label className="text-sm text-[#666]">
+          {label}
+        </label>
+
+        <select
+          value={value}
+          onChange={(e) =>
+            onChange(e.target.value)
+          }
+          className="
+          w-full
+          rounded-xl
+          border
+          border-[#E6E2DA]
+          px-4
+          py-3
+          outline-none
+          focus:border-[#7A866D]
+          transition
+        "
+        >
+          {options.map((item) => (
+            <option key={item} value={item}>
+              {item}
+            </option>
+          ))}
+        </select>
+      </div>
+      );
 }
