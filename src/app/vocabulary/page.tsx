@@ -4,17 +4,22 @@ import { useState } from "react";
 import Link from "next/link";
 import { useWords } from "@/hooks/useWords";
 import SearchBar from "./SearchBar";
+import VocabularyCard from "./VocabularyCard";
 
 export default function VocabularyPage() {
-  const { words } = useWords();
+  const {
+    words,
+    toggleFavorite,
+  } = useWords();
 
   const [search, setSearch] = useState("");
 
-  const filteredWords = words.filter(
-    (word) =>
+  const filteredWords = words.filter((word) => {
+    return (
       word.word.includes(search) ||
       word.meaning.includes(search)
-  );
+    );
+  });
 
   return (
     <main className="min-h-screen bg-[#F8F7F3]">
@@ -38,30 +43,21 @@ export default function VocabularyPage() {
 
         <div className="mt-10">
 
-          <p className="text-gray-500 mb-5">
+          <p className="text-gray-500 mb-6">
             共 {filteredWords.length} 个单词
           </p>
 
-          {filteredWords.map((word) => (
-            <div
-              key={word.id}
-              className="
-                bg-white
-                rounded-3xl
-                p-6
-                mb-4
-                border
-              "
-            >
-              <div className="text-2xl">
-                {word.word}
-              </div>
+          <div className="space-y-5">
 
-              <div className="text-gray-500 mt-2">
-                {word.meaning}
-              </div>
-            </div>
-          ))}
+            {filteredWords.map((word) => (
+              <VocabularyCard
+                key={word.id}
+                word={word}
+                onFavorite={toggleFavorite}
+              />
+            ))}
+
+          </div>
 
         </div>
 
