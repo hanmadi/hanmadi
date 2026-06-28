@@ -3,8 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useWords } from "@/hooks/useWords";
-import SearchBar from "./SearchBar";
-import VocabularyCard from "./VocabularyCard";
+import SearchBar from "@/app/components/SearchBar";
+import VocabularyCard from "@/app/components/VocabularyCard";
 
 export default function VocabularyPage() {
   const {
@@ -53,7 +53,7 @@ export default function VocabularyPage() {
               <VocabularyCard
                 key={word.id}
                 word={word}
-                onFavorite={toggleFavorite}
+                onToggleFavorite={toggleFavorite}
               />
             ))}
 
