@@ -2,17 +2,26 @@
 
 import { useState } from "react";
 import Link from "next/link";
+
 import { useWords } from "@/hooks/useWords";
+
 import SearchBar from "@/app/components/SearchBar";
 import VocabularyCard from "@/app/components/VocabularyCard";
+import WordModal from "@/app/components/WordModal";
+import FloatingButton from "@/app/components/FloatingButton";
+
+import { Word } from "@/types/word";
 
 export default function VocabularyPage() {
   const {
     words,
+    addWord,
     toggleFavorite,
   } = useWords();
 
   const [search, setSearch] = useState("");
+
+  const [modalOpen, setModalOpen] = useState(false);
 
   const filteredWords = words.filter((word) => {
     return (
@@ -20,6 +29,13 @@ export default function VocabularyPage() {
       word.meaning.includes(search)
     );
   });
+
+  const handleAddWord = (word: Word) => {
+    addWord({
+      ...word,
+      id: Date.now(),
+    });
+  };
 
   return (
     <main className="min-h-screen bg-[#F8F7F3]">
@@ -62,6 +78,18 @@ export default function VocabularyPage() {
         </div>
 
       </div>
+
+      <WordModal
+        open={modalOpen}
+        initialValue={null}
+        onClose={() => setModalOpen(false)}
+        onSave={handleAddWord}
+      />
+
+      <FloatingButton
+        onClick={() => setModalOpen(true)}
+      />
+
     </main>
   );
 }
